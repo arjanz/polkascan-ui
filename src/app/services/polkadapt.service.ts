@@ -59,6 +59,12 @@ export class PolkadaptService {
   private currentNetwork: string = '';
   private onlineHandler: EventListener = (ev) => {
     this.reconnectPolkscanApi();
+    this.reconnectSubstrateRpc();
+  };
+
+  private offlineHandler: EventListener = (ev) => {
+    this.polkascanWsConnected.next(false);
+    this.substrateRpcConnected.next(false);
   };
 
   constructor(private config: AppConfig) {
@@ -165,6 +171,7 @@ export class PolkadaptService {
     }
 
     window.addEventListener('online', this.onlineHandler);
+    window.addEventListener('offline', this.offlineHandler);
     // Wait until PolkADAPT has initialized all adapters.
     await this.polkadapt.ready();
   }
